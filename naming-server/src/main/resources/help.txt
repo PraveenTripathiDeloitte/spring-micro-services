@@ -1,0 +1,5 @@
+eureka.instance.prefer-ip-address=true
+
+OR
+
+eureka.instance.hostname=localhost
