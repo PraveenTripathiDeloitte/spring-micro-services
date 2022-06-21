@@ -1,7 +1,8 @@
 package com.spring.microservices.currencyexchangeservice.controller;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,15 @@ public class CircuitBreakerController {
 
     @GetMapping("/sample-api")
 //    @Retry(name = "sample-api", fallbackMethod = "hardCodedResponse")
-    @CircuitBreaker(name = "default", fallbackMethod = "hardCodedResponse")
+//    @CircuitBreaker(name = "default", fallbackMethod = "hardCodedResponse")
+    @RateLimiter(name = "default") // to set the limits of request in specific interval of time
+    @Bulkhead(name = "default") // to set the no of concurrent call allowed
     public String sampleAPI() {
         logger.info("Sample API call received");
-        ResponseEntity<String> responseEntity = new RestTemplate().getForEntity("http://localhost:8000/some-dummy-url",
-                String.class);
-        return responseEntity.getBody();
+//        ResponseEntity<String> responseEntity = new RestTemplate().getForEntity("http://localhost:8000/some-dummy-url",
+//                String.class);
+//        return responseEntity.getBody();
+        return "sample-api";
     }
 
     /*
